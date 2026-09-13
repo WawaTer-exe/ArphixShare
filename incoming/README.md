@@ -1,7 +1,7 @@
 # Incoming videos
 
-Paste one authorized public YouTube URL per line into `youtube-links.txt`. The GitHub Actions importer checks approximately every 8 minutes, downloads up to 20 links per run, and removes only successful downloads.
+Use [ytUltra’s YouTube Video Downloader](https://www.ytultra.com/en/youtube-video-downloader/) manually for each authorized link in `youtube-links.txt`. After downloading a video, upload the resulting `.mp4` file into this `incoming/` folder.
 
-You can also upload MP4 files directly into this folder. The workflow imports up to 20 MP4s per run into `videos/`, extracts a JPEG frame at about one second into `thumbnails/`, creates playable HTML pages from `videos/example.html`, and refreshes the Hot Videos section on the homepage with each generated thumbnail.
+The GitHub Actions workflow checks approximately every 8 minutes. It processes up to 20 MP4 files per run, moves them into `videos/`, extracts a JPEG frame at about one second into `thumbnails/`, creates playable HTML pages from `videos/example.html`, and refreshes the Hot Videos section on the homepage.
 
-Only submit videos that you own or are explicitly authorized to download and republish. Downloads are capped at 720p and 95 MB per file to protect the repository from oversized assets. Failed links remain in `youtube-links.txt` for retry.
+Only upload videos that you own or are explicitly authorized to download and republish. Keep individual files below 95 MB so they remain compatible with the repository workflow. The link list is a manual queue; the workflow does not contact YouTube or operate ytUltra automatically.
