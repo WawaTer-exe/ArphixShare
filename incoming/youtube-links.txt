@@ -1,3 +1,21 @@
-# Paste one authorized public YouTube URL per line.
-# The workflow downloads up to 20 links per run and removes successful links.
-# Failed links stay here for a later retry.
+# Authorized YouTube URLs queued for ArphixTube import
+https://www.youtube.com/watch?v=1WEAJ-DFkHE
+https://www.youtube.com/watch?v=kJQP7kiw5Fk
+https://www.youtube.com/watch?v=XqZsoesa55w
+https://www.youtube.com/watch?v=RgKAFK5djSk
+https://www.youtube.com/watch?v=JGwWNGJdvx8
+https://www.youtube.com/watch?v=9bZkp7q19f0
+https://www.youtube.com/watch?v=gdZLi9oWNZg
+https://www.youtube.com/watch?v=OPf0YbXqDm0
+https://www.youtube.com/watch?v=e_04ZrNroTo
+https://www.youtube.com/watch?v=k85mRPqvMbE
+https://www.youtube.com/watch?v=5E3G2Q1gX3k
+https://www.youtube.com/watch?v=YbJOTdZBX1g
+https://www.youtube.com/watch?v=RP4uto8g8b0
+https://www.youtube.com/watch?v=Yy2g1j1z1Xk
+https://www.youtube.com/watch?v=0e3GPea1Tzg
+https://www.youtube.com/watch?v=60ItHLz5WEA
+https://www.youtube.com/watch?v=kffacxfA7G4
+https://www.youtube.com/watch?v=09R8_2nJtjg
+https://www.youtube.com/watch?v=3AtDnEC4zak
+https://www.youtube.com/watch?v=r7qovpFAGrQ
