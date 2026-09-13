@@ -24,6 +24,9 @@ jobs:
       - name: Install downloader
         run: python3 -m pip install --upgrade yt-dlp
 
+      - name: Install FFmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
       - name: Download authorized YouTube links
         run: python3 scripts/download_youtube_links.py
 
