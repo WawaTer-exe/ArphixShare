@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ArphixTube - Broadcast Yourself</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="site">
+  <header class="header">
+    <div class="account">Hello, <a href="#">Sign In</a> <a href="#">Sign Up</a></div>
+    <a class="logo" href="index.html">Arphix<span>Tube</span></a>
+    <form class="search" id="searchForm">
+      <input id="searchInput" type="search" placeholder="Search">
+      <button type="submit">Search</button>
+      <a class="button" href="videos/PenguinTest.html">Upload</a>
+    </form>
+  </header>
+  <nav class="nav">
+    <a href="index.html">Home</a><a href="#featured">Videos</a><a href="#channels">Channels</a><a href="#community">Community</a>
+  </nav>
+  <div class="content">
+    <aside class="sidebar">
+      <div class="side-box"><h3>Browse</h3><a href="index.html">Featured Videos</a><a href="#recent">Most Recent</a><a href="#popular">Most Viewed</a><a href="#favorites">Favorites</a></div>
+      <div class="side-box" id="channels"><h3>My Account</h3><a href="#">My Videos</a><a href="#">My Favorites</a><a href="#">My Subscriptions</a></div>
+    </aside>
+    <main class="main">
+      <div class="notice">Welcome to ArphixTube — share your videos with friends and the world.</div>
+      <h1 class="heading" id="hot">Hot Videos</h1>
+      <p class="subheading">Fresh uploads from the ArphixTube community.</p>
+      <div class="video-grid" id="hotVideoGrid">
+      <!-- AUTO-HOT-START -->
+        <a class="video" href="videos/my-son-ate-my-go-pro-hero-session.html" data-title="my son ate my go pro hero session">
+          <img class="thumb" src="thumbnails/my-son-ate-my-go-pro-hero-session.jpg" alt="My Son Ate My Go Pro Hero Session thumbnail">
+          <span class="video-title">My Son Ate My Go Pro Hero Session</span><span class="meta">New upload | just now</span>
+        </a>
+        <a class="video" href="videos/walking-through-target-while-purple.html" data-title="walking through target while purple">
+          <img class="thumb" src="thumbnails/walking-through-target-while-purple.jpg" alt="Walking Through Target While Purple thumbnail">
+          <span class="video-title">Walking Through Target While Purple</span><span class="meta">New upload | just now</span>
+        </a>
+            <!-- AUTO-HOT-END -->
+      </div>
+      <h1 class="heading" id="featured">Recent Videos</h1>
+      <p class="subheading">Watch and discover videos uploaded by the ArphixTube community.</p>
+      <div class="video-grid" id="videoGrid">
+        <a class="video" href="videos/me-at-the-zoo.html" data-title="me at the zoo">
+          <img class="thumb" src="assets/me-at-the-zoo.jpg" alt="me at the zoo">
+          <span class="video-title">me at the zoo</span><span class="meta">1,204 views | 2 days ago</span>
+        </a>
+      </div>
+      <p class="no-results hidden" id="noResults">No videos matched your search.</p>
+    </main>
+  </div>
+  <footer class="footer">Copyright 2008-2026 ArphixTube &nbsp; | &nbsp; About &nbsp; | &nbsp; Help &nbsp; | &nbsp; Terms of Use</footer>
+</div>
+<script>
+  document.getElementById('searchForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+    var query = document.getElementById('searchInput').value.toLowerCase().trim();
+    var cards = document.querySelectorAll('.video');
+    var visible = 0;
+    cards.forEach(function (card) {
+      var matches = !query || card.dataset.title.indexOf(query) !== -1;
+      card.classList.toggle('hidden', !matches);
+      if (matches) visible++;
+    });
+    document.getElementById('noResults').classList.toggle('hidden', visible !== 0);
+  });
+</script>
+</body>
+</html>
