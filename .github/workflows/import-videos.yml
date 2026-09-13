@@ -21,31 +21,20 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install downloader
-        run: python3 -m pip install --upgrade yt-dlp
-
-      - name: Install Deno JavaScript runtime
-        uses: denoland/setup-deno@v1
-        with:
-          deno-version: v2.x
-
       - name: Install FFmpeg
         run: sudo apt-get update && sudo apt-get install -y ffmpeg
 
-      - name: Download authorized YouTube links
-        run: python3 scripts/download_youtube_links.py
-
-      - name: Import up to 20 incoming MP4 files
+      - name: Import manually downloaded MP4 files
         run: python3 scripts/import_videos.py
 
-      - name: Commit imported videos and Hot section
+      - name: Commit imported videos, thumbnails, and Hot section
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add incoming videos index.html
+          git add incoming videos thumbnails index.html
           if git diff --cached --quiet; then
-            echo "No video changes to commit"
+            echo "No MP4 changes to commit"
           else
-            git commit -m "Download incoming links and refresh Hot section"
+            git commit -m "Import manually downloaded videos and refresh Hot section"
             git push
           fi
