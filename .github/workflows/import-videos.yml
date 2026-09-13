@@ -27,14 +27,14 @@ jobs:
       - name: Import manually downloaded MP4 files
         run: python3 scripts/import_videos.py
 
-      - name: Commit imported videos, thumbnails, and Hot section
+      - name: Commit imported videos and refreshed catalogs
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add incoming videos thumbnails index.html
+          git add incoming videos thumbnails index.html shorts.html
           if git diff --cached --quiet; then
             echo "No MP4 changes to commit"
           else
-            git commit -m "Import manually downloaded videos and refresh Hot section"
+            git commit -m "Import videos and refresh catalogs"
             git push
           fi
