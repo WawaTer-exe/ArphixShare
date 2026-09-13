@@ -4,6 +4,7 @@ from pathlib import Path
 import html
 import re
 import shutil
+import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 INCOMING = ROOT / "incoming"
