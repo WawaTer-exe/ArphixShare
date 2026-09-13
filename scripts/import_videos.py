@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
-"""Import MP4 files from incoming/ into the static ArphixTube site."""
+"""Import MP4 files into the static ArphixTube site and refresh video catalogs."""
+from __future__ import annotations
+
 from pathlib import Path
 import html
+import json
 import re
 import shutil
 import subprocess
@@ -11,8 +14,16 @@ INCOMING = ROOT / "incoming"
 VIDEOS = ROOT / "videos"
 THUMBNAILS = ROOT / "thumbnails"
 INDEX = ROOT / "index.html"
+SHORTS = ROOT / "shorts.html"
 TEMPLATE = VIDEOS / "example.html"
 MAX_PER_RUN = 20
+
+HOT_START = "<!-- AUTO-HOT-START -->"
+HOT_END = "<!-- AUTO-HOT-END -->"
+FEATURED_START = "<!-- AUTO-FEATURED-START -->"
+FEATURED_END = "<!-- AUTO-FEATURED-END -->"
+SHORTS_START = "<!-- AUTO-SHORTS-START -->"
+SHORTS_END = "<!-- AUTO-SHORTS-END -->"
 
 INCOMING.mkdir(exist_ok=True)
 VIDEOS.mkdir(exist_ok=True)
@@ -46,9 +57,10 @@ def page_for(video_name: str, title: str, page_slug: str) -> str:
     return page
 
 
-def extract_thumbnail(video_path: Path, thumbnail_path: Path) -> None:
+def extract_thumbnail(video_path: Path, thumbnail_path: Path, duration: float | None = None) -> None:
+    timestamp = min(1.0, max(0.0, duration / 2)) if duration is not None else 1.0
     command = [
-        "ffmpeg", "-y", "-ss", "00:00:01", "-i", str(video_path),
+        "ffmpeg", "-y", "-ss", f"{timestamp:.3f}", "-i", str(video_path),
         "-frames:v", "1", "-vf", "scale=640:-2", "-q:v", "3", str(thumbnail_path),
     ]
     result = subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True)
@@ -56,7 +68,7 @@ def extract_thumbnail(video_path: Path, thumbnail_path: Path) -> None:
         raise RuntimeError(f"Could not create thumbnail for {video_path.name}: {result.stderr[-500:]}")
 
 
-def prepare_thumbnail(video_path: Path, thumbnail_path: Path) -> None:
+def prepare_thumbnail(video_path: Path, thumbnail_path: Path, duration: float | None = None) -> None:
     custom_path = video_path.with_suffix(".png")
     if custom_path.exists():
         command = ["ffmpeg", "-y", "-i", str(custom_path), "-vf", "scale=640:-2", "-q:v", "3", str(thumbnail_path)]
@@ -65,24 +77,103 @@ def prepare_thumbnail(video_path: Path, thumbnail_path: Path) -> None:
             raise RuntimeError(f"Could not convert custom thumbnail for {video_path.name}: {result.stderr[-500:]}")
         custom_path.unlink()
     else:
-        extract_thumbnail(video_path, thumbnail_path)
+        extract_thumbnail(video_path, thumbnail_path, duration)
 
 
-def hot_card(page_slug: str, title: str) -> str:
+def probe_video(video_path: Path) -> dict[str, float] | None:
+    """Return the primary video dimensions and duration, or None if probing fails."""
+    command = [
+        "ffprobe", "-v", "error", "-select_streams", "v:0",
+        "-show_entries", "stream=width,height:format=duration", "-of", "json", str(video_path),
+    ]
+    result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    if result.returncode != 0:
+        print(f"Could not inspect {video_path.name}; it will not be auto-classified as a Short.")
+        return None
+
+    try:
+        data = json.loads(result.stdout)
+        stream = data["streams"][0]
+        return {
+            "width": float(stream["width"]),
+            "height": float(stream["height"]),
+            "duration": float(data["format"]["duration"]),
+        }
+    except (KeyError, IndexError, TypeError, ValueError, json.JSONDecodeError):
+        print(f"Could not read metadata for {video_path.name}; it will not be auto-classified as a Short.")
+        return None
+
+
+def is_short_video(title: str, metadata: dict[str, float] | None) -> bool:
+    """Classify tagged uploads or portrait/square videos up to three minutes as Shorts."""
+    if re.search(r"(?:^|\s)#shorts\b", title, flags=re.IGNORECASE):
+        return True
+    if metadata is None:
+        return False
+    return metadata["height"] >= metadata["width"] and metadata["duration"] <= 180
+
+
+def video_card(page_slug: str, title: str, meta: str = "New upload | just now") -> str:
     safe_title = html.escape(title, quote=True)
     safe_slug = html.escape(page_slug, quote=True)
-    return f'''        <a class="video" href="videos/{safe_slug}.html" data-title="{safe_title.lower()}">\n          <img class="thumb" src="thumbnails/{safe_slug}.jpg" alt="{safe_title} thumbnail">\n          <span class="video-title">{safe_title}</span><span class="meta">New upload | just now</span>\n        </a>'''
+    return f'''        <a class="video" data-video-slug="{safe_slug}" href="videos/{safe_slug}.html" data-title="{safe_title.lower()}">
+          <img class="thumb" src="thumbnails/{safe_slug}.jpg" alt="{safe_title} thumbnail">
+          <span class="video-title">{safe_title}</span><span class="meta">{meta}</span>
+        </a>'''
+
+
+def short_card(page_slug: str, title: str, duration: float | None) -> str:
+    safe_title = html.escape(title, quote=True)
+    safe_slug = html.escape(page_slug, quote=True)
+    duration_label = f"{int(round(duration))} sec" if duration is not None else "New Short"
+    return f'''        <a class="short-card" data-video-slug="{safe_slug}" href="videos/{safe_slug}.html">
+          <img class="short-thumb" src="thumbnails/{safe_slug}.jpg" alt="{safe_title} thumbnail">
+          <span class="short-title">{safe_title}</span><span class="short-meta">{duration_label} &middot; ArphixShorts</span>
+        </a>'''
+
+
+def replace_card_section(path: Path, start: str, end: str, cards: list[str]) -> None:
+    current = path.read_text(encoding="utf-8")
+    pattern = re.escape(start) + r".*?" + re.escape(end)
+    if not re.search(pattern, current, flags=re.S):
+        raise SystemExit(f"{path.name} is missing {start}/{end} markers")
+    cards_html = "\n".join(cards)
+    block = f"{start}\n{cards_html}\n      {end}" if cards_html else f"{start}\n      {end}"
+    path.write_text(re.sub(pattern, block, current, flags=re.S), encoding="utf-8")
+
+
+def prepend_new_cards(path: Path, start: str, end: str, cards: list[str]) -> None:
+    """Prepend new cards without deleting earlier workflow imports or curated cards."""
+    current = path.read_text(encoding="utf-8")
+    pattern = re.escape(start) + r"(.*?)" + re.escape(end)
+    match = re.search(pattern, current, flags=re.S)
+    if match is None:
+        raise SystemExit(f"{path.name} is missing {start}/{end} markers")
+
+    existing = match.group(1).strip()
+    additions = []
+    for card in cards:
+        slug_match = re.search(r'data-video-slug="([^"]+)"', card)
+        if slug_match is None or f'data-video-slug="{slug_match.group(1)}"' not in existing:
+            additions.append(card)
+
+    if not additions:
+        return
+    body = "\n".join(additions + ([existing] if existing else []))
+    block = f"{start}\n{body}\n      {end}"
+    path.write_text(current[:match.start()] + block + current[match.end():], encoding="utf-8")
 
 
 def update_hot_section(cards: list[str]) -> None:
-    current = INDEX.read_text(encoding="utf-8")
-    start = "      <!-- AUTO-HOT-START -->"
-    end = "      <!-- AUTO-HOT-END -->"
-    if start not in current or end not in current:
-        raise SystemExit("index.html is missing AUTO-HOT-START/AUTO-HOT-END markers")
-    block = start + "\n" + "\n".join(cards) + "\n      " + end
-    current = re.sub(re.escape(start) + r".*?" + re.escape(end), block, current, flags=re.S)
-    INDEX.write_text(current, encoding="utf-8")
+    replace_card_section(INDEX, HOT_START, HOT_END, cards)
+
+
+def update_featured_section(cards: list[str]) -> None:
+    prepend_new_cards(INDEX, FEATURED_START, FEATURED_END, cards)
+
+
+def update_shorts_section(cards: list[str]) -> None:
+    prepend_new_cards(SHORTS, SHORTS_START, SHORTS_END, cards)
 
 
 def main() -> int:
@@ -94,20 +185,30 @@ def main() -> int:
         print("No new MP4 files found in incoming/")
         return 0
 
-    cards = []
+    hot_cards: list[str] = []
+    featured_cards: list[str] = []
+    shorts_cards: list[str] = []
     for source in files:
+        metadata = probe_video(source)
         video_destination = unique_destination(VIDEOS, source.name)
         shutil.move(str(source), str(video_destination))
         page_slug = slugify(video_destination.name)
         page_destination = unique_destination(VIDEOS, page_slug + ".html")
         title = Path(video_destination.name).stem.replace("_", " ").replace("-", " ").strip().title()
         thumbnail_destination = unique_destination(THUMBNAILS, page_destination.stem + ".jpg")
-        prepare_thumbnail(video_destination, thumbnail_destination)
-        page_destination.write_text(page_for(video_destination.name, title, page_slug), encoding="utf-8")
-        cards.append(hot_card(page_destination.stem, title))
+        duration = metadata["duration"] if metadata is not None else None
+        prepare_thumbnail(video_destination, thumbnail_destination, duration)
+        page_destination.write_text(page_for(video_destination.name, title, page_destination.stem), encoding="utf-8")
+
+        hot_cards.append(video_card(page_destination.stem, title))
+        featured_cards.append(video_card(page_destination.stem, title))
+        if is_short_video(title, metadata):
+            shorts_cards.append(short_card(page_destination.stem, title, duration))
         print(f"Imported {video_destination.name} -> {page_destination.name}")
 
-    update_hot_section(cards)
+    update_hot_section(hot_cards)
+    update_featured_section(featured_cards)
+    update_shorts_section(shorts_cards)
     return 0
 
 
