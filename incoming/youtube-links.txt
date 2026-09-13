@@ -1,4 +1,4 @@
-# Authorized YouTube URLs queued for ArphixTube import
+# Paste one authorized public YouTube URL per line. Successful downloads are removed automatically.
 https://www.youtube.com/watch?v=1WEAJ-DFkHE
 https://www.youtube.com/watch?v=kJQP7kiw5Fk
 https://www.youtube.com/watch?v=XqZsoesa55w
