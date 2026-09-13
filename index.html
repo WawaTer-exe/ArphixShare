@@ -1,147 +1,66 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>YouTube - ArphixShare</title>
-
-<style>
-body {
-  margin: 0;
-  font-family: Arial;
-  background: #e6e6e6;
-}
-
-/* TOP BAR */
-.topbar {
-  background: white;
-  border-bottom: 1px solid #ccc;
-  padding: 6px 10px;
-  display: flex;
-  align-items: center;
-}
-
-.logo {
-  color: red;
-  font-size: 28px;
-  font-weight: bold;
-  margin-right: 20px;
-}
-
-.topbar input {
-  width: 300px;
-  padding: 4px;
-}
-
-.topbar button {
-  margin-left: 5px;
-  padding: 4px 8px;
-}
-
-/* LAYOUT */
-.layout {
-  display: table;
-  width: 100%;
-}
-
-/* SIDEBAR */
-.sidebar {
-  display: table-cell;
-  width: 180px;
-  background: #f5f5f5;
-  padding: 10px;
-  vertical-align: top;
-  border-right: 1px solid #ccc;
-}
-
-.sidebar a {
-  display: block;
-  padding: 6px 0;
-  color: black;
-  text-decoration: none;
-  font-size: 13px;
-}
-
-/* MAIN */
-.main {
-  display: table-cell;
-  padding: 15px;
-}
-
-/* VIDEO CARDS */
-.video-grid {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.video {
-  width: 200px;
-  background: white;
-  border: 1px solid #ccc;
-  margin: 10px;
-  padding: 5px;
-  text-decoration: none;
-  color: black;
-}
-
-.video img {
-  width: 100%;
-  height: 120px;
-  object-fit: cover;
-}
-
-.title {
-  font-size: 13px;
-  margin-top: 4px;
-}
-
-.meta {
-  font-size: 11px;
-  color: gray;
-}
-</style>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ArphixTube - Broadcast Yourself</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-
-<div class="topbar">
-  <div class="logo">YouTube</div>
-  <input placeholder="Search">
-  <button>Search</button>
-  <button>Upload</button>
-</div>
-
-<div class="layout">
-
-  <div class="sidebar">
-    <a href="#">Home</a>
-    <a href="#">Trending</a>
-    <a href="#">Subscriptions</a>
-    <a href="#">History</a>
+<div class="site">
+  <header class="header">
+    <div class="account">Hello, <a href="#">Sign In</a> <a href="#">Sign Up</a></div>
+    <a class="logo" href="index.html">Arphix<span>Tube</span></a>
+    <form class="search" id="searchForm">
+      <input id="searchInput" type="search" placeholder="Search">
+      <button type="submit">Search</button>
+      <a class="button" href="videos/PenguinTest.html">Upload</a>
+    </form>
+  </header>
+  <nav class="nav">
+    <a href="index.html">Home</a><a href="#featured">Videos</a><a href="#channels">Channels</a><a href="#community">Community</a>
+  </nav>
+  <div class="content">
+    <aside class="sidebar">
+      <div class="side-box"><h3>Browse</h3><a href="index.html">Featured Videos</a><a href="#recent">Most Recent</a><a href="#popular">Most Viewed</a><a href="#favorites">Favorites</a></div>
+      <div class="side-box" id="channels"><h3>My Account</h3><a href="#">My Videos</a><a href="#">My Favorites</a><a href="#">My Subscriptions</a></div>
+    </aside>
+    <main class="main">
+      <div class="notice">Welcome to ArphixTube — share your videos with friends and the world.</div>
+      <h1 class="heading" id="featured">Featured Videos</h1>
+      <p class="subheading">Watch and discover videos uploaded by the ArphixTube community.</p>
+      <div class="video-grid" id="videoGrid">
+        <a class="video" href="videos/PenguinTest.html" data-title="penguin testing vid penguin">
+          <img class="thumb" src="assets/Penguin.jpeg" alt="Penguin Testing Vid thumbnail">
+          <span class="video-title">Penguin Testing Vid</span><span class="meta">1,204 views | 2 days ago</span>
+        </a>
+        <a class="video" href="videos/video1.html" data-title="atlantic ambience ocean">
+          <img class="thumb" src="assets/Penguin.jpeg" alt="Atlantic Ambience thumbnail">
+          <span class="video-title">Atlantic Ambience</span><span class="meta">532 views | 1 week ago</span>
+        </a>
+        <a class="video" href="videos/PenguinTest.html" data-title="arphix share test upload">
+          <img class="thumb" src="assets/Penguin.jpeg" alt="ArphixTube test upload thumbnail">
+          <span class="video-title">ArphixTube Test Upload</span><span class="meta">208 views | 2 weeks ago</span>
+        </a>
+      </div>
+      <p class="no-results hidden" id="noResults">No videos matched your search.</p>
+    </main>
   </div>
-
-  <div class="main">
-
-    <h3>Featured Videos</h3>
-
-    <div class="video-grid">
-
-      <a class="video" href="videos/PenguinTest.html">
-        <img src="assets/Penguin.jpeg">
-        <div class="title">Penguin Testing Vid</div>
-        <div class="meta">1,204 views</div>
-      </a>
-
-      <a class="video" href="video2.html">
-        <img src="assets/thumbs/video2.jpg">
-        <div class="title">My First Upload</div>
-        <div class="meta">532 views</div>
-      </a>
-
-    </div>
-
-  </div>
-
+  <footer class="footer">Copyright 2008-2026 ArphixTube &nbsp; | &nbsp; About &nbsp; | &nbsp; Help &nbsp; | &nbsp; Terms of Use</footer>
 </div>
-
+<script>
+  document.getElementById('searchForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+    var query = document.getElementById('searchInput').value.toLowerCase().trim();
+    var cards = document.querySelectorAll('.video');
+    var visible = 0;
+    cards.forEach(function (card) {
+      var matches = !query || card.dataset.title.indexOf(query) !== -1;
+      card.classList.toggle('hidden', !matches);
+      if (matches) visible++;
+    });
+    document.getElementById('noResults').classList.toggle('hidden', visible !== 0);
+  });
+</script>
 </body>
 </html>
