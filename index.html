@@ -18,11 +18,11 @@
     </form>
   </header>
   <nav class="nav">
-    <a href="index.html">Home</a><a href="#featured">Videos</a><a href="#channels">Channels</a><a href="#community">Community</a>
+    <a href="index.html">Home</a><a href="#featured">Videos</a><a href="shorts.html">ArphixShorts</a><a href="#channels">Channels</a><a href="#community">Community</a>
   </nav>
   <div class="content">
     <aside class="sidebar">
-      <div class="side-box"><h3>Browse</h3><a href="index.html">Featured Videos</a><a href="#recent">Most Recent</a><a href="#popular">Most Viewed</a><a href="#favorites">Favorites</a></div>
+      <div class="side-box"><h3>Browse</h3><a href="index.html">Featured Videos</a><a href="#recent">Most Recent</a><a href="#popular">Most Viewed</a><a href="shorts.html">ArphixShorts</a><a href="#favorites">Favorites</a></div>
       <div class="side-box" id="channels"><h3>My Account</h3><a href="#">My Videos</a><a href="#">My Favorites</a><a href="#">My Subscriptions</a></div>
     </aside>
     <main class="main">
@@ -31,19 +31,29 @@
       <p class="subheading">Fresh uploads from the ArphixTube community.</p>
       <div class="video-grid" id="hotVideoGrid">
       <!-- AUTO-HOT-START -->
-        <a class="video" href="videos/me-at-the-zoo.html" data-title="me at the zoo">
+        <a class="video" data-video-slug="me-at-the-zoo" href="videos/me-at-the-zoo.html" data-title="me at the zoo">
           <img class="thumb" src="thumbnails/me-at-the-zoo.jpg" alt="Me At The Zoo thumbnail">
           <span class="video-title">Me At The Zoo</span><span class="meta">New upload | just now</span>
         </a>
-        <a class="video" href="videos/glass-doesn-t-work-rick-and-morty-edit-shorts-mangaedit-ricksanchez.html" data-title="「 glass doesn&#x27;t work 😂」  rick and morty edit #shorts #mangaedit #ricksanchez">
-          <img class="thumb" src="thumbnails/glass-doesn-t-work-rick-and-morty-edit-shorts-mangaedit-ricksanchez.jpg" alt="「 Glass Doesn&#x27;T Work 😂」  Rick And Morty Edit #Shorts #Mangaedit #Ricksanchez thumbnail">
-          <span class="video-title">「 Glass Doesn&#x27;T Work 😂」  Rick And Morty Edit #Shorts #Mangaedit #Ricksanchez</span><span class="meta">New upload | just now</span>
+        <a class="video" data-video-slug="glass-doesn-t-work-rick-and-morty-edit-shorts-mangaedit-ricksanchez" href="videos/glass-doesn-t-work-rick-and-morty-edit-shorts-mangaedit-ricksanchez.html" data-title="「 glass doesn&#x27;t work 😂」 rick and morty edit #shorts #mangaedit #ricksanchez">
+          <img class="thumb" src="thumbnails/glass-doesn-t-work-rick-and-morty-edit-shorts-mangaedit-ricksanchez.jpg" alt="Rick and Morty edit thumbnail">
+          <span class="video-title">「 Glass Doesn'T Work 😂」 Rick And Morty Edit #Shorts #Mangaedit #Ricksanchez</span><span class="meta">New upload | just now</span>
         </a>
-            <!-- AUTO-HOT-END -->
+      <!-- AUTO-HOT-END -->
       </div>
       <h1 class="heading" id="featured">Featured Videos</h1>
-      <p class="subheading">Watch and discover videos uploaded by the ArphixTube community.</p>
+      <p class="subheading">Every video published by the import workflow appears here automatically.</p>
       <div class="video-grid" id="videoGrid">
+      <!-- AUTO-FEATURED-START -->
+        <a class="video" data-video-slug="me-at-the-zoo" href="videos/me-at-the-zoo.html" data-title="me at the zoo">
+          <img class="thumb" src="thumbnails/me-at-the-zoo.jpg" alt="Me At The Zoo thumbnail">
+          <span class="video-title">Me At The Zoo</span><span class="meta">New upload | just now</span>
+        </a>
+        <a class="video" data-video-slug="glass-doesn-t-work-rick-and-morty-edit-shorts-mangaedit-ricksanchez" href="videos/glass-doesn-t-work-rick-and-morty-edit-shorts-mangaedit-ricksanchez.html" data-title="「 glass doesn&#x27;t work 😂」 rick and morty edit #shorts #mangaedit #ricksanchez">
+          <img class="thumb" src="thumbnails/glass-doesn-t-work-rick-and-morty-edit-shorts-mangaedit-ricksanchez.jpg" alt="Rick and Morty edit thumbnail">
+          <span class="video-title">「 Glass Doesn'T Work 😂」 Rick And Morty Edit #Shorts #Mangaedit #Ricksanchez</span><span class="meta">New upload | just now</span>
+        </a>
+      <!-- AUTO-FEATURED-END -->
         <a class="video" href="videos/PenguinTest.html" data-title="penguin testing vid penguin">
           <img class="thumb" src="assets/Penguin.jpeg" alt="Penguin Testing Vid thumbnail">
           <span class="video-title">Penguin Testing Vid</span><span class="meta">1,204 views | 2 days ago</span>
@@ -56,9 +66,9 @@
           <img class="thumb" src="assets/Penguin.jpeg" alt="ArphixTube test upload thumbnail">
           <span class="video-title">ArphixTube Test Upload</span><span class="meta">208 views | 2 weeks ago</span>
         </a>
-        <a class="video" href="videos/IloseControlSong.html" data-title="Teddy Swims - Lose Control (The Village Sessions)">
-          <img class="thumb" src="thumbnails/TeddySwimsIlosecontrol.jpeg" alt="TeddySwims I lose Control Thumbnail">
-          <span class="video-title">Teddy Swims - Lose Control (The Village Sessions)</span><span class="meta"> 489,590,540 views | Aug 22, 2024</span>
+        <a class="video" href="videos/IloseControlSong.html" data-title="teddy swims lose control the village sessions">
+          <img class="thumb" src="thumbnails/TeddySwimsIlosecontrol.jpeg" alt="Teddy Swims I lose Control thumbnail">
+          <span class="video-title">Teddy Swims - Lose Control (The Village Sessions)</span><span class="meta">489,590,540 views | Aug 22, 2024</span>
         </a>
       </div>
       <p class="no-results hidden" id="noResults">No videos matched your search.</p>
