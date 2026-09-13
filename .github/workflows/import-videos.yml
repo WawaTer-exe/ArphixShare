@@ -21,6 +21,12 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Install downloader
+        run: python3 -m pip install --upgrade yt-dlp
+
+      - name: Download authorized YouTube links
+        run: python3 scripts/download_youtube_links.py
+
       - name: Import up to 20 incoming MP4 files
         run: python3 scripts/import_videos.py
 
@@ -32,6 +38,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No video changes to commit"
           else
-            git commit -m "Import incoming videos and refresh Hot section"
+            git commit -m "Download incoming links and refresh Hot section"
             git push
           fi
