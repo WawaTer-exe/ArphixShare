@@ -55,6 +55,18 @@ def extract_thumbnail(video_path: Path, thumbnail_path: Path) -> None:
         raise RuntimeError(f"Could not create thumbnail for {video_path.name}: {result.stderr[-500:]}")
 
 
+def prepare_thumbnail(video_path: Path, thumbnail_path: Path) -> None:
+    custom_path = video_path.with_suffix(".png")
+    if custom_path.exists():
+        command = ["ffmpeg", "-y", "-i", str(custom_path), "-vf", "scale=640:-2", "-q:v", "3", str(thumbnail_path)]
+        result = subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True)
+        if result.returncode != 0 or not thumbnail_path.exists():
+            raise RuntimeError(f"Could not convert custom thumbnail for {video_path.name}: {result.stderr[-500:]}")
+        custom_path.unlink()
+    else:
+        extract_thumbnail(video_path, thumbnail_path)
+
+
 def hot_card(page_slug: str, title: str) -> str:
     safe_title = html.escape(title, quote=True)
     safe_slug = html.escape(page_slug, quote=True)
@@ -89,7 +101,7 @@ def main() -> int:
         page_destination = unique_destination(VIDEOS, page_slug + ".html")
         title = Path(video_destination.name).stem.replace("_", " ").replace("-", " ").strip().title()
         thumbnail_destination = unique_destination(THUMBNAILS, page_destination.stem + ".jpg")
-        extract_thumbnail(video_destination, thumbnail_destination)
+        prepare_thumbnail(video_destination, thumbnail_destination)
         page_destination.write_text(page_for(video_destination.name, title, page_slug), encoding="utf-8")
         cards.append(hot_card(page_destination.stem, title))
         print(f"Imported {video_destination.name} -> {page_destination.name}")
