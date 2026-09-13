@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ArphixShare - Video Player</title>
+
+  <style>
+    body {
+      margin: 0;
+      background: #0b0b0f;
+      font-family: Arial, sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .topbar {
+      height: 50px;
+      background: linear-gradient(to right, #1a1a22, #0f0f14);
+      display: flex;
+      align-items: center;
+      padding: 0 15px;
+      font-size: 14px;
+      border-bottom: 1px solid #2a2a33;
+    }
+
+    .title {
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    video {
+      width: 100%;
+      max-width: 1000px;
+      border: 2px solid #2a2a33;
+      background: black;
+      box-shadow: 0 0 20px rgba(0,0,0,0.6);
+    }
+
+    .controls {
+      text-align: center;
+      padding: 10px;
+      background: #111118;
+      border-top: 1px solid #2a2a33;
+    }
+
+    button {
+      background: #1f1f2a;
+      border: 1px solid #333;
+      color: white;
+      padding: 6px 12px;
+      margin: 0 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #2a2a3a;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="topbar">
+    <div class="title">ArphixShare Player</div>
+  </div>
+
+  <div class="container">
+    <video id="videoPlayer" src="assets/videos/14996966-hd_1920_1080_25fps.mp4" controls></video>
+  </div>
+
+  <div class="controls">
+    <button onclick="playVideo()">Play</button>
+    <button onclick="pauseVideo()">Pause</button>
+    <button onclick="restartVideo()">Restart</button>
+    <button onclick="toggleFullscreen()">Fullscreen</button>
+  </div>
+
+  <script>
+    const video = document.getElementById("videoPlayer");
+
+    function playVideo() {
+      video.play();
+    }
+
+    function pauseVideo() {
+      video.pause();
+    }
+
+    function restartVideo() {
+      video.currentTime = 0;
+      video.play();
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        video.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    }
+  </script>
+
+</body>
+</html>
