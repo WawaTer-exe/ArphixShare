@@ -24,6 +24,11 @@ jobs:
       - name: Install downloader
         run: python3 -m pip install --upgrade yt-dlp
 
+      - name: Install Deno JavaScript runtime
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v2.x
+
       - name: Install FFmpeg
         run: sudo apt-get update && sudo apt-get install -y ffmpeg
 
