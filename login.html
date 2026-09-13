@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login - ArphixShare</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #eaeaea;
+      margin: 0;
+    }
+
+    .topbar {
+      background: #cc0000;
+      color: white;
+      padding: 10px;
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    .box {
+      width: 320px;
+      margin: 80px auto;
+      background: white;
+      border: 1px solid #ccc;
+      padding: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin: 8px 0;
+      border: 1px solid #999;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #cc0000;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #990000;
+    }
+
+    .small {
+      font-size: 11px;
+      color: gray;
+      margin-top: 10px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="topbar">
+    ArphixShare Login
+  </div>
+
+  <div class="box">
+    <h3>Sign In</h3>
+
+    <input id="username" placeholder="Username">
+    <input id="password" type="password" placeholder="Password">
+
+    <button onclick="login()">Login</button>
+
+    <div class="small">
+      (Fake login — no real security)
+    </div>
+  </div>
+
+  <script>
+    function login() {
+      const user = document.getElementById("username").value;
+      const pass = document.getElementById("password").value;
+
+      if (!user || !pass) {
+        alert("Enter username and password");
+        return;
+      }
+
+      // store fake session
+      localStorage.setItem("arphix_user", user);
+
+      // redirect to homepage
+      window.location.href = "index.html";
+    }
+  </script>
+
+</body>
+</html>
