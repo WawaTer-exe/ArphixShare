@@ -7,6 +7,15 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <script>
+  const user = localStorage.getItem("arphix_user");
+
+  if (user) {
+    console.log("Logged in as:", user);
+  } else {
+    window.location.href = "login.html";
+  }
+</script>
 <div class="site">
   <header class="header">
     <div class="account">Hello, <a href="#">Sign In</a> <a href="#">Sign Up</a></div>
