@@ -1,0 +1,3 @@
+# Paste one authorized public YouTube URL per line.
+# The workflow downloads up to 20 links per run and removes successful links.
+# Failed links stay here for a later retry.
