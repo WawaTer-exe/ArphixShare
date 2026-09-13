@@ -39,16 +39,26 @@ def page_for(video_name: str, title: str, page_slug: str) -> str:
     page = page.replace("My Video Title", title)
     page = page.replace("YourUsername", "ArphixTube")
     page = page.replace("Write a short description of your video here.", "Automatically imported from the incoming folder.")
-    page = re.sub(r'poster="[^"]+"', 'poster="../thumbnails/example.jpeg"', page, count=1)
+    page = re.sub(r'poster="[^"]+"', f'poster="../thumbnails/{page_slug}.jpg"', page, count=1)
     page = re.sub(r'<source src="[^"]+" type="video/mp4">', f'<source src="{html.escape(video_name)}" type="video/mp4">', page, count=1)
     page = page.replace('href="example.html">Upload', 'href="../index.html">Upload')
     return page
 
 
+def extract_thumbnail(video_path: Path, thumbnail_path: Path) -> None:
+    command = [
+        "ffmpeg", "-y", "-ss", "00:00:01", "-i", str(video_path),
+        "-frames:v", "1", "-vf", "scale=640:-2", "-q:v", "3", str(thumbnail_path),
+    ]
+    result = subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True)
+    if result.returncode != 0 or not thumbnail_path.exists():
+        raise RuntimeError(f"Could not create thumbnail for {video_path.name}: {result.stderr[-500:]}")
+
+
 def hot_card(page_slug: str, title: str) -> str:
     safe_title = html.escape(title, quote=True)
     safe_slug = html.escape(page_slug, quote=True)
-    return f'''        <a class="video" href="videos/{safe_slug}.html" data-title="{safe_title.lower()}">\n          <img class="thumb" src="thumbnails/example.jpeg" alt="{safe_title} thumbnail">\n          <span class="video-title">{safe_title}</span><span class="meta">New upload | just now</span>\n        </a>'''
+    return f'''        <a class="video" href="videos/{safe_slug}.html" data-title="{safe_title.lower()}">\n          <img class="thumb" src="thumbnails/{safe_slug}.jpg" alt="{safe_title} thumbnail">\n          <span class="video-title">{safe_title}</span><span class="meta">New upload | just now</span>\n        </a>'''
 
 
 def update_hot_section(cards: list[str]) -> None:
@@ -78,6 +88,8 @@ def main() -> int:
         page_slug = slugify(video_destination.name)
         page_destination = unique_destination(VIDEOS, page_slug + ".html")
         title = Path(video_destination.name).stem.replace("_", " ").replace("-", " ").strip().title()
+        thumbnail_destination = unique_destination(THUMBNAILS, page_destination.stem + ".jpg")
+        extract_thumbnail(video_destination, thumbnail_destination)
         page_destination.write_text(page_for(video_destination.name, title, page_slug), encoding="utf-8")
         cards.append(hot_card(page_destination.stem, title))
         print(f"Imported {video_destination.name} -> {page_destination.name}")
