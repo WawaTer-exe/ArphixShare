@@ -1,115 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ArphixShare - Video Player</title>
-
-  <style>
-    body {
-      margin: 0;
-      background: #ffffff;
-      font-family: Arial, sans-serif;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-    }
-
-    .topbar {
-      height: 50px;
-      background: linear-gradient(to right, #1a1a22, #0f0f14);
-      display: flex;
-      align-items: center;
-      padding: 0 15px;
-      font-size: 14px;
-      border-bottom: 1px solid #2a2a33;
-    }
-
-    .title {
-      font-weight: bold;
-      letter-spacing: 1px;
-    }
-
-    .container {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    video {
-      width: 100%;
-      max-width: 1000px;
-      border: 2px solid #2a2a33;
-      background: black;
-      box-shadow: 0 0 20px rgba(0,0,0,0.6);
-    }
-
-    .controls {
-      text-align: center;
-      padding: 10px;
-      background: #111118;
-      border-top: 1px solid #2a2a33;
-    }
-
-    button {
-      background: #1f1f2a;
-      border: 1px solid #333;
-      color: white;
-      padding: 6px 12px;
-      margin: 0 5px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #2a2a3a;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Penguin Testing Vid - ArphixTube</title>
+  <link rel="stylesheet" href="../style.css">
 </head>
-
 <body>
-
-  <div class="topbar">
-    <div class="title">ArphixShare Player</div>
-  </div>
-
-  <div class="container">
-    <video id="videoPlayer" src="Penguin.mp4" controls></video>
-  </div>
-
-  <div class="controls">
-    <button onclick="playVideo()">Play</button>
-    <button onclick="pauseVideo()">Pause</button>
-    <button onclick="restartVideo()">Restart</button>
-    <button onclick="toggleFullscreen()">Fullscreen</button>
-  </div>
-
-  <script>
-    const video = document.getElementById("videoPlayer");
-
-    function playVideo() {
-      video.play();
-    }
-
-    function pauseVideo() {
-      video.pause();
-    }
-
-    function restartVideo() {
-      video.currentTime = 0;
-      video.play();
-    }
-
-    function toggleFullscreen() {
-      if (!document.fullscreenElement) {
-        video.requestFullscreen();
-      } else {
-        document.exitFullscreen();
-      }
-    }
-  </script>
-
+<div class="site">
+  <header class="header">
+    <div class="account">Hello, <a href="#">Sign In</a> <a href="#">Sign Up</a></div>
+    <a class="logo" href="../index.html">Arphix<span>Tube</span></a>
+    <form class="search" action="../index.html"><input name="q" type="search" placeholder="Search"><button type="submit">Search</button><a class="button" href="PenguinTest.html">Upload</a></form>
+  </header>
+  <nav class="nav"><a href="../index.html">Home</a><a href="../index.html#featured">Videos</a><a href="#">Channels</a><a href="#">Community</a></nav>
+  <main class="player-wrap">
+    <a class="back" href="../index.html">&laquo; Back to ArphixTube</a>
+    <div class="player-layout">
+      <section class="player-main">
+        <video class="video-player" controls preload="metadata" poster="../assets/Penguin.jpeg">
+          <source src="../15924221-hd_1920_1080_30fps.mp4" type="video/mp4">
+          Your browser does not support HTML5 video.
+        </video>
+        <div class="video-info"><h1>Penguin Testing Vid</h1><p>Uploaded by <a href="#">WawaTer-exe</a> &nbsp; | &nbsp; 1,204 views</p><p>A quick ArphixTube test upload.</p></div>
+      </section>
+      <aside class="player-side"><h3>About this video</h3><p>Enjoy this video from the ArphixTube community.</p><p><a href="#">Add to Favorites</a></p><p><a href="#">Share Video</a></p></aside>
+    </div>
+  </main>
+  <footer class="footer">Copyright 2008-2026 ArphixTube &nbsp; | &nbsp; About &nbsp; | &nbsp; Help</footer>
+</div>
 </body>
 </html>
